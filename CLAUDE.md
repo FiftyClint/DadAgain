@@ -159,7 +159,6 @@ app.js       Everything. Icons, storage, all six screens, all content data.
 manifest.json  Standalone display, portrait, #0d0c0a theme.
 sw.js        Cache-first shell caching.
 icon-*.png   180 (apple-touch), 192, 512, maskable 512, favicon.
-standalone.html  Single-file build. Everything inlined. No offline caching.
 ```
 
 ## Screens

@@ -3,15 +3,11 @@
 Installs to your iPhone home screen. Full screen, own icon, works offline.
 No App Store, no Apple developer fee, no build step.
 
-## Two builds in here
+## What's in here
 
-**`standalone.html`** is the whole app in one file. Icons, styles, code,
-manifest, all inlined. Move it anywhere as a single file. Installs to your
-iPhone home screen. The one thing it gives up is offline caching, because a
-service worker has to be its own file at its own URL.
-
-**The multi-file build** is `index.html` + `app.js` + `manifest.json` +
-`sw.js` + icons. Same app, plus offline caching. Use this one.
+One build: `index.html` + `app.js` + `manifest.json` + `sw.js` + icons.
+Nine files. Host them together and it installs to your home screen and
+opens offline.
 
 ## Files
 
@@ -19,7 +15,6 @@ service worker has to be its own file at its own URL.
 |---|---|
 | `CLAUDE.md` | Project context for Claude Code. Architecture, design system, voice rules. |
 | `SEED-PROMPT.md` | Paste this into Claude Code as your first message. |
-| `standalone.html` | Entire app, one file. No offline caching. |
 | `index.html` | The shell. Fonts, iOS meta tags, safe-area handling. |
 | `app.js` | The whole app. React, written in JSX, compiled in the browser. |
 | `manifest.json` | Tells iOS the name, icon, and colors. |
@@ -39,10 +34,7 @@ Two things require a real web server:
 - Babel loads `app.js` over the network, which `file://` blocks
 - Service workers only run on `https://` or `localhost`
 
-`standalone.html` clears the first problem, since nothing is external. It may
-open straight from Files on your phone. It still cannot cache offline.
-
-Either way, hosting it is one step and covered below.
+Hosting it is one step and covered below.
 
 ---
 
@@ -54,7 +46,7 @@ Either way, hosting it is one step and covered below.
 2. Pick the **HTML, CSS, JS** template
 3. Name it `dad-again`, click **Create**
 4. In the file panel on the left, delete the starter `index.html`, `style.css`, and `script.js`
-5. Drag all 8 files from this folder into the file panel
+5. Drag all 9 app files from this folder into the file panel. That is everything except the three `.md` files, which are notes and do not need to be uploaded.
 6. Click **Run** at the top
 7. A preview window opens with a URL at the top like `dad-again.yourname.repl.co`
 8. Copy that URL
