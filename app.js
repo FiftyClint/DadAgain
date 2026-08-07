@@ -35,15 +35,34 @@ const store = {
   del(k)      { try { localStorage.removeItem(k); } catch (e) {} }
 };
 
-const today   = () => new Date().toISOString().split('T')[0];
-const weekOf  = bd => Math.max(1, Math.min(12, Math.floor(Math.floor((new Date() - new Date(bd + 'T12:00:00')) / 864e5) / 7) + 1));
-const dayOf   = bd => Math.max(0, Math.floor((new Date() - new Date(bd + 'T12:00:00')) / 864e5));
+// Local calendar date, YYYY-MM-DD. Not toISOString(), which gives the UTC date
+// and is already tomorrow for a US timezone in the evening.
+const today = () => {
+  const d = new Date(), p = x => String(x).padStart(2, '0');
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+};
+
+// Whole calendar days between the birthdate and today, both anchored at local
+// noon. Anchoring both ends is what keeps DST and timezones from moving the
+// count, and it makes the number roll over at midnight instead of at lunchtime.
+const daysSince = bd => {
+  const born = new Date(bd + 'T12:00:00');
+  const now = new Date();
+  now.setHours(12, 0, 0, 0);
+  return Math.round((now - born) / 864e5);
+};
+
+const dayOf   = bd => Math.max(0, daysSince(bd));
+const weekOf  = bd => Math.max(1, Math.min(12, Math.floor(dayOf(bd) / 7) + 1));
 const buzz    = () => { try { navigator.vibrate && navigator.vibrate(8); } catch (e) {} };
 
 function getTodaysTips(week, dayInWeek) {
   const all = TIPS_BY_WEEK[week] || TIPS_BY_WEEK[1];
-  const s = ((dayInWeek - 1) * 3) % all.length;
-  return [all[s % all.length], all[(s + 1) % all.length], all[(s + 2) % all.length]];
+  // Wrap into range from both directions. A negative index here used to
+  // render three blank tips instead of failing loudly.
+  const at = i => all[((i % all.length) + all.length) % all.length];
+  const s = (dayInWeek - 1) * 3;
+  return [at(s), at(s + 1), at(s + 2)];
 }
 
 /* ---------- Root ---------- */
@@ -304,7 +323,8 @@ function Onboarding({ step, setStep, tmpBaby, setTmpBaby, tmpNotif, setTmpNotif,
 function HomeScreen({ baby, prog, toggleTask, setScreen, setQh }) {
   const week = weekOf(baby.birthdate);
   const day = dayOf(baby.birthdate);
-  const tips = getTodaysTips(week, ((day - 1) % 7) + 1);
+  // weekOf counts days 0-6 as week 1, so day 0 is the first day of the week.
+  const tips = getTodaysTips(week, (day % 7) + 1);
   const tasks = WEEKLY_CHECKLISTS[week] || [];
   const done = prog.weeklyChecklists[week] || {};
   const n = Object.keys(done).filter(k => done[k]).length;

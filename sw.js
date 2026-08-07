@@ -1,4 +1,4 @@
-const CACHE = 'dadagain-v1';
+const CACHE = 'dadagain-v2';
 const ASSETS = [
   './',
   './index.html',
