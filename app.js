@@ -59,6 +59,33 @@ const validBd = bd => isDate(bd) && bd <= today();
 
 const dayOf   = bd => Math.max(0, daysSince(bd));
 const weekOf  = bd => Math.max(1, Math.min(12, Math.floor(dayOf(bd) / 7) + 1));
+// Home-screen install. iOS Safari has no install prompt, so we explain the
+// Share steps. Android Chrome fires beforeinstallprompt, which we hold onto.
+const isStandalone = () => {
+  try { return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches; }
+  catch (e) { return false; }
+};
+const isIOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let deferredInstall = null;
+let installSnoozed = false; // "Later" holds until the app is next opened
+try { window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; }); } catch (e) {}
+
+// Advances the streak when a new calendar day starts. Used on boot and when
+// the app comes back from the background, since iOS often resumes a
+// home-screen app without reloading it.
+const rollDay = g => {
+  const diff = Math.floor((new Date(today()) - new Date(g.lastOpenedDate)) / 864e5);
+  if (diff === 1) { g.streakDays++; g.totalPoints += 5; }
+  else if (diff > 1) { g.streakDays = 1; g.totalPoints += 5; }
+  g.lastOpenedDate = today();
+  return g;
+};
+const pendingCelebration = (bd, g) => {
+  const w = weekOf(bd);
+  return (w > 1 && w <= 12 && g.celebrationsShown.indexOf(w - 1) === -1) ? w - 1 : null;
+};
+
 const buzz    = () => { try { navigator.vibrate && navigator.vibrate(8); } catch (e) {} };
 
 function getTodaysTips(week, dayInWeek) {
@@ -83,10 +110,7 @@ function DadAgain() {
     if (!g || typeof g.streakDays !== 'number') {
       g = { streakDays: 1, lastOpenedDate: today(), totalPoints: 5, weeklyChecklists: {}, celebrationsShown: [] };
     } else {
-      const diff = Math.floor((new Date(today()) - new Date(g.lastOpenedDate)) / 864e5);
-      if (diff === 1) { g.streakDays++; g.totalPoints += 5; }
-      else if (diff > 1) { g.streakDays = 1; g.totalPoints += 5; }
-      g.lastOpenedDate = today();
+      rollDay(g);
     }
     if (!g.weeklyChecklists) g.weeklyChecklists = {};
     if (!g.celebrationsShown) g.celebrationsShown = [];
@@ -96,10 +120,7 @@ function DadAgain() {
     try { n = JSON.parse(store.get('notifPrefs')); } catch (e) {}
     if (!n) n = { dailyEnabled: true, dailyTime: '08:00', weeklyEnabled: true };
 
-    const w = weekOf(p.birthdate);
-    const cel = (w > 1 && w <= 12 && g.celebrationsShown.indexOf(w - 1) === -1) ? w - 1 : null;
-
-    return { screen: 'home', baby: p, prog: g, notif: n, celebrate: cel };
+    return { screen: 'home', baby: p, prog: g, notif: n, celebrate: pendingCelebration(p.birthdate, g) };
   })();
 
   const [screen, setScreen] = useState(boot.screen);
@@ -113,10 +134,31 @@ function DadAgain() {
   const [tmpBaby, setTmpBaby] = useState({ name: '', birthdate: today() });
   const [tmpNotif, setTmpNotif] = useState({ dailyEnabled: true, dailyTime: '08:00', weeklyEnabled: true });
 
+  const [, setTick] = useState(0);
+
   useEffect(() => {
     const el = document.getElementById('boot');
     if (el) el.remove();
+    // Ask the browser not to evict our localStorage under storage pressure.
+    try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
   }, []);
+
+  // Coming back from the background: re-render so the day count and tips are
+  // current, and roll the streak if midnight passed while the app sat open.
+  useEffect(() => {
+    const onShow = () => {
+      if (document.visibilityState !== 'visible') return;
+      if (baby && prog && prog.lastOpenedDate !== today()) {
+        const g = rollDay(JSON.parse(JSON.stringify(prog)));
+        store.set('userProgress', JSON.stringify(g));
+        setProg(g);
+        if (celebrate === null) setCelebrate(pendingCelebration(baby.birthdate, g));
+      }
+      setTick(t => t + 1);
+    };
+    document.addEventListener('visibilitychange', onShow);
+    return () => document.removeEventListener('visibilitychange', onShow);
+  }, [baby, prog, celebrate]);
 
   // Scroll to top whenever the screen changes
   useEffect(() => { try { window.scrollTo(0, 0); } catch (e) {} }, [screen, qh, guide]);
@@ -160,13 +202,13 @@ function DadAgain() {
     <div className="min-h-screen bg-[#0d0c0a] text-[#f5f2ed] max-w-md mx-auto relative overflow-x-hidden">
       <div className="fixed inset-0 grain opacity-[.04] pointer-events-none mix-blend-screen z-50" />
       {screen === 'onboarding' && <Onboarding {...{ step, setStep, tmpBaby, setTmpBaby, tmpNotif, setTmpNotif, finishOnboarding, setScreen, setQh }} />}
-      {screen === 'home'       && baby && prog && <HomeScreen {...{ baby, prog, toggleTask, setScreen, setQh }} />}
+      {screen === 'home'       && baby && prog && <HomeScreen {...{ baby, prog, toggleTask, setScreen: id => { if (id === 'guides') setGuide(null); setScreen(id); }, setQh }} />}
       {screen === 'quickhelp'  && <QuickHelp {...{ qh, setQh, setScreen, orphan: !baby }} />}
       {screen === 'guides'     && <Guides {...{ guide, setGuide }} />}
       {screen === 'milestones' && baby && <Milestones week={weekOf(baby.birthdate)} />}
       {screen === 'settings'   && baby && prog && <SettingsScreen {...{ baby, prog, notif, saveBaby, saveNotif, wipe }} />}
       {celebrate && <Celebration week={celebrate} name={baby && baby.name} onDone={dismissCelebration} />}
-      {baby && screen !== 'onboarding' && screen !== 'quickhelp' && <Nav screen={screen} setScreen={setScreen} />}
+      {baby && screen !== 'onboarding' && screen !== 'quickhelp' && <Nav screen={screen} setScreen={id => { if (id === 'guides') setGuide(null); setScreen(id); }} />}
     </div>
   );
 }
@@ -208,6 +250,96 @@ const PageTitle = ({ kicker, line1, line2, sub }) => (
     {sub && <p className="text-[14px] text-[#a8a39a] mt-4 leading-relaxed font-light">{sub}</p>}
   </div>
 );
+
+const NotADoctor = () => (
+  <p className="mono text-[10px] tracking-[.3em] uppercase text-[#5a5650] text-center leading-relaxed mt-10">
+    A cheat sheet, not a doctor.<br />If you are unsure, call yours.
+  </p>
+);
+
+// Shown on Home until the app is on the home screen. In a Safari tab, iOS can
+// delete saved data after 7 days of Safari use without visiting; a home-screen
+// app keeps its own counter. So this is about keeping the birthdate, not polish.
+function InstallCard() {
+  const [hidden, setHiddenState] = useState(isStandalone() || installSnoozed);
+  const setHidden = v => { if (v) installSnoozed = true; setHiddenState(v); };
+  const [canPrompt, setCanPrompt] = useState(!!deferredInstall);
+  useEffect(() => {
+    const on = e => { e.preventDefault(); deferredInstall = e; setCanPrompt(true); };
+    window.addEventListener('beforeinstallprompt', on);
+    return () => window.removeEventListener('beforeinstallprompt', on);
+  }, []);
+  if (hidden) return null;
+  const ios = isIOS();
+  const safari = ios && !/CriOS|FxiOS|EdgiOS/.test(navigator.userAgent);
+
+  return (
+    <div className="mx-6 mb-4 anim-up-3">
+      <div className="rounded-2xl border border-[#d97757]/30 bg-[#14130f] p-6">
+        <div className="flex items-center justify-between mb-4">
+          <span className="mono text-[10px] tracking-[.3em] uppercase text-[#d97757]">Do this once</span>
+          <button onClick={() => { buzz(); setHidden(true); }} className="mono text-[10px] tracking-[.3em] uppercase text-[#5a5650]">Later</button>
+        </div>
+        <div className="serif text-[24px] leading-tight font-light mb-2">Put it on your <span className="italic text-[#d97757]">home screen.</span></div>
+        <p className="text-[14px] text-[#a8a39a] leading-relaxed font-light mb-5">
+          Opens like an app, works with no signal, and keeps your data. Left in a browser tab, your phone can clear it.
+        </p>
+        {canPrompt ? (
+          <button onClick={() => { buzz(); deferredInstall.prompt(); deferredInstall.userChoice.then(() => { deferredInstall = null; setCanPrompt(false); setHidden(isStandalone()); }); }}
+            className="w-full bg-[#d97757] active:bg-[#b85a3d] text-[#0d0c0a] h-12 rounded-full font-medium text-[14px]">
+            Add to home screen
+          </button>
+        ) : ios && !safari ? (
+          <p className="text-[14px] text-[#d4cec3] leading-relaxed">Open this page in Safari first. Then tap Share, then Add to Home Screen.</p>
+        ) : ios ? (
+          <div>
+            {[['Tap', 'Share', 'the square with the arrow, bottom of the screen'],
+              ['Scroll, tap', 'Add to Home Screen', ''],
+              ['Tap', 'Add', 'then open it from the new icon']].map(([a, b, c], i) => (
+              <div key={i} className="flex gap-4 py-2.5 border-b border-[#1c1a17] last:border-0">
+                <span className="mono text-[10px] text-[#d97757] mt-1 shrink-0 tabular-nums">0{i + 1}</span>
+                <span className="text-[14px] text-[#d4cec3] leading-relaxed">
+                  {a} <span className="text-[#f5f2ed] font-medium">{b}</span>{c ? <span className="text-[#8b8579]">, {c}</span> : null}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-[14px] text-[#d4cec3] leading-relaxed">Open this link on your phone. On iPhone use Safari, then Share, then Add to Home Screen.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Last line of defense. A render error anywhere used to unmount the whole tree
+// and leave a blank screen. Now it says so and keeps 911 one tap away.
+class Boundary extends React.Component {
+  constructor(p) { super(p); this.state = { broke: false }; }
+  static getDerivedStateFromError() { return { broke: true }; }
+  componentDidCatch() { const el = document.getElementById('boot'); if (el) el.remove(); }
+  render() {
+    if (!this.state.broke) return this.props.children;
+    return (
+      <div className="min-h-screen bg-[#0d0c0a] text-[#f5f2ed] max-w-md mx-auto px-6 pt-safe pb-safe flex flex-col">
+        <div className="mono text-[10px] tracking-[.3em] uppercase text-[#dc4444] mb-6">Something broke</div>
+        <h1 className="serif text-[42px] leading-[.95] font-light mb-4">That's on us,<br /><span className="italic text-[#d97757]">not you.</span></h1>
+        <p className="text-[15px] text-[#a8a39a] leading-relaxed font-light mb-10">Your data is still saved. Reload and it should come back.</p>
+        <button onClick={() => location.reload()}
+          className="w-full bg-[#d97757] active:bg-[#b85a3d] text-[#0d0c0a] h-14 rounded-full font-medium text-[15px] mb-3">Reload</button>
+        <a href="tel:911" className="w-full h-14 rounded-full border border-[#5a2418] text-[#dc4444] flex items-center justify-center gap-2 font-medium text-[15px]">
+          <PhoneI cls="w-4 h-4" sw={2} /> Emergency? Call 911
+        </a>
+        <button onClick={() => {
+            if (!window.confirm('Reset the app? The birthdate, streak, and checklists are erased.')) return;
+            ['babyProfile', 'userProgress', 'notifPrefs'].forEach(k => store.del(k));
+            location.reload();
+          }}
+          className="mt-auto pt-10 mono text-[10px] tracking-[.3em] uppercase text-[#5a5650]">Still broken after a reload? Reset the app</button>
+      </div>
+    );
+  }
+}
 
 /* ---------- Onboarding ---------- */
 function Onboarding({ step, setStep, tmpBaby, setTmpBaby, tmpNotif, setTmpNotif, finishOnboarding, setScreen, setQh }) {
@@ -255,7 +387,7 @@ function Onboarding({ step, setStep, tmpBaby, setTmpBaby, tmpNotif, setTmpNotif,
           <span className="text-[14px] font-medium text-[#e8e3d8]">I need help right now</span>
         </button>
         <div className="text-center pt-1">
-          <span className="mono text-[10px] tracking-[.3em] uppercase text-[#3a3530]">Takes 30 seconds</span>
+          <span className="mono text-[10px] tracking-[.3em] uppercase text-[#5a5650]">Takes 30 seconds</span>
         </div>
       </div>
     </div>
@@ -313,6 +445,10 @@ function Onboarding({ step, setStep, tmpBaby, setTmpBaby, tmpNotif, setTmpNotif,
           )}
           <Toggle label="Weekly summary" sub="Sunday recap, what's coming" on={tmpNotif.weeklyEnabled}
             onClick={() => setTmpNotif({ ...tmpNotif, weeklyEnabled: !tmpNotif.weeklyEnabled })} />
+          <p className="text-[12px] text-[#8b8579] leading-relaxed mt-4">
+            Straight answer: iPhone does not deliver scheduled notifications to a home-screen web app yet.
+            Your choice is saved. Until then, the tip is waiting on the home screen when you open it.
+          </p>
         </div>
       )}
 
@@ -382,6 +518,11 @@ function HomeScreen({ baby, prog, toggleTask, setScreen, setQh }) {
           <span className="mono text-[10px] tracking-[.25em] uppercase text-[#8b8579]">Week {week} of 12</span>
           <div className="flex-1 h-px bg-[#2a2622]" />
         </div>
+        {day >= 84 && (
+          <p className="text-[13px] text-[#8b8579] leading-relaxed mt-4 text-center">
+            Past the first 12 weeks. This is where the cheat sheet ends. Quick Help still works.
+          </p>
+        )}
       </div>
 
       <div className="mx-6 mb-4 anim-up-2">
@@ -427,6 +568,8 @@ function HomeScreen({ baby, prog, toggleTask, setScreen, setQh }) {
           </div>
         </button>
       </div>
+
+      <InstallCard />
 
       <div className="mx-6 mb-4 anim-up-4">
         <div className="rounded-2xl border border-[#2a2622] bg-[#14130f] p-6">
@@ -560,7 +703,7 @@ function QuickHelp({ qh, setQh, setScreen, orphan }) {
             </div>
             {["Baby is blue (lips, face)", "Not breathing, or struggling to",
               "Won't wake up or is unresponsive", "Seizure", "Severe bleeding",
-              "Major fall or injury", "Mom talks about harming herself or the baby"].map((t, i) => (
+              "Major fall or injury", "She talks about harming herself or the baby"].map((t, i) => (
               <div key={i} className="flex gap-3 text-[14px] text-[#e8e3d8] leading-relaxed mb-2.5 last:mb-0">
                 <span className="text-[#dc4444] mt-[7px] text-[5px]">●</span><span>{t}</span>
               </div>
@@ -570,6 +713,7 @@ function QuickHelp({ qh, setQh, setScreen, orphan }) {
             </a>
           </div>
         </div>
+        <NotADoctor />
       </div>
     </div>
   );
@@ -633,6 +777,7 @@ function Guides({ guide, setGuide }) {
             <ArrUR cls="w-4 h-4 text-[#5a5650] shrink-0" />
           </button>
         ))}
+        <NotADoctor />
       </div>
     </div>
   );
@@ -742,8 +887,18 @@ function SettingsScreen({ baby, prog, notif, saveBaby, saveNotif, wipe }) {
           <Trash cls="w-4 h-4" /><span className="text-[14px] font-medium">Reset all data</span>
         </button>
 
+        <div>
+          <div className="mono text-[10px] tracking-[.3em] uppercase text-[#5a5650] mb-4">About</div>
+          {["Everything you enter stays on this phone. No account, no ads, no tracking.",
+            "Delete the app and the data goes with it.",
+            "This is a cheat sheet, not a doctor. If you are unsure, call yours.",
+            "Emergency numbers here are US: 911, and 988 for a mental health crisis."].map((t, i) => (
+            <p key={i} className="text-[13px] text-[#a8a39a] leading-relaxed py-3 border-b border-[#1c1a17] last:border-0">{t}</p>
+          ))}
+        </div>
+
         <div className="text-center">
-          <span className="mono text-[10px] tracking-[.3em] uppercase text-[#3a3530]">v1.0 · for dads who forgot</span>
+          <span className="mono text-[10px] tracking-[.3em] uppercase text-[#5a5650]">v1.1 · for dads who forgot</span>
         </div>
       </div>
 
@@ -812,7 +967,7 @@ function Celebration({ week, name, onDone }) {
 /* ================= DATA ================= */
 
 const TIPS_BY_WEEK = {
-  1: ["First poops are black and tar-like. That's meconium. Normal.", "Aim for 8 to 12 feedings today. Track the wet diapers.", "Skin to skin regulates her breathing and temp. Shirt off, baby on your chest.", "Mom is bleeding heavily and running on nothing. Bring water and food before she asks.", "Rectal fever of 100.4 or higher is an ER trip, not a wait-and-see.", "Cord stays on. Sponge baths only. Fold the diaper below it.", "Baby will drop 7 to 10 percent of birth weight this week. Expected."],
+  1: ["First poops are black and tar-like. That's meconium. Normal.", "Aim for 8 to 12 feedings today. Track the wet diapers.", "Skin to skin regulates the kid's breathing and temp. Shirt off, baby on your chest.", "She is bleeding heavily and running on nothing. Bring water and food before she asks.", "Rectal fever of 100.4 or higher is an ER trip, not a wait-and-see.", "Cord stays on. Sponge baths only. Fold the diaper below it.", "Baby will drop 7 to 10 percent of birth weight this week. Expected."],
   2: ["Baby should be back to birth weight by the end of this week.", "Catch hunger cues before the crying: rooting, hands to mouth, lip smacking.", "Cluster feeding is normal. It is not a sign the milk is running out.", "Baby blues run through about day 14. Moodiness and crying. Not PPD yet.", "Cord stump may drop this week. Don't pull it. A little blood is fine.", "Cradle cap, baby acne, peeling skin. All normal. Don't pick at any of it.", "First real smile usually shows up somewhere in weeks 4 to 6."],
   3: ["Growth spurt is likely this week. Hungrier does not mean low supply.", "Evening fussiness peaks weeks 3 through 6. The 5 S's are your tool.", "Tummy time, 1 to 3 minutes, a few times a day. Hates the floor? Use your chest.", "Crying 3+ hours a day for 3+ weeks means read the colic guide.", "Take the baby out for a walk. Give her an hour alone in the house.", "Burp every 2 to 3 ounces, or when you switch sides.", "Spit-up looks like way more than it is. One to two tablespoons is nothing."],
   4: ["One month in. Baby may lift their head for a second during tummy time.", "Real smiles may start. Smile back every time. That's the attachment work.", "One-month pediatrician visit is this week. Go with her.", "Talk and narrate constantly. They're starting to tune in to your voice.", "Sleep may stretch a little. Some 3 to 4 hour blocks at night.", "Crying tends to peak right around now. It gets better after this.", "She is still healing. Do not let up on the support."],
@@ -897,7 +1052,7 @@ const QUICK_HELP = [
     { heading: "Signs they're getting enough", items: ["Six or more wet diapers a day after day 5", "Gaining weight", "You can hear swallowing", "Content after a feed"] },
     { heading: "Trouble signs", items: ["Under six wet diapers a day", "Still losing weight after day 5", "No swallowing sounds", "Hungry constantly, never satisfied", "Painful for her every single feed"] },
     { heading: "Breastfeeding fixes", items: ["Change the position", "Breast compression during the feed", "Switch sides more than once", "Skin to skin first", "Feed on cues, not on crying", "Call a lactation consultant. This is literally their job and it is not a failure."] },
-    { heading: "Bottle: won't take it", items: ["Different nipple shape or flow", "Have someone other than mom offer it", "Offer when slightly hungry, not starving", "Warm the nipple", "Change the hold"] },
+    { heading: "Bottle: won't take it", items: ["Different nipple shape or flow", "Have someone other than her offer it. That means you.", "Offer when slightly hungry, not starving", "Warm the nipple", "Change the hold"] },
     { heading: "Bottle: starts then stops", items: ["Probably needs a burp", "Flow too fast: gulping, choking, pulling off", "Flow too slow: frustrated, chewing", "Check the nipple isn't clogged"] },
     { heading: "Call the doctor", danger: true, items: ["Refusing all feeds for 4+ hours", "No wet diaper in 6+ hours", "Projectile vomiting", "Fever plus not eating", "Dehydration: dry mouth, no tears, sunken soft spot"] }
   ]},
@@ -1003,4 +1158,4 @@ const MILESTONES = [
 ];
 
 /* ---------- Mount ---------- */
-ReactDOM.createRoot(document.getElementById('root')).render(<DadAgain />);
+ReactDOM.createRoot(document.getElementById('root')).render(<Boundary><DadAgain /></Boundary>);

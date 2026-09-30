@@ -172,18 +172,28 @@ icon-*.png   180 (apple-touch), 192, 512, maskable 512, favicon.
    hatch is the most important thing on the screen. Screens 1 and 2 collect
    birthdate plus optional name, then notification prefs.
 2. **Home.** Streak, date, age in days, week N of 12, Today card with three
-   age-keyed tips, Quick Help button, weekly checklist with progress, two
-   tiles to Guides and Milestones.
+   age-keyed tips, Quick Help button, install card (only when not opened from
+   the home screen; "Later" is held in memory, not a fourth storage key),
+   weekly checklist with progress, two tiles to Guides and Milestones.
 3. **Quick Help.** Six cards: won't stop crying, weird poop, won't sleep, not
    eating, something looks wrong, she seems off. Ordered sections, danger
    sections in the red treatment. Plus 911 criteria with a live `tel:` link.
 4. **Guides.** Nine reference manuals.
 5. **Milestones.** Weeks 1 to 12, marked past / now / coming.
 6. **Settings.** Name, birthdate, notification toggles, streak and points,
-   destructive reset behind a confirm sheet.
+   About (privacy, not-a-doctor, US emergency numbers), destructive reset
+   behind a confirm sheet.
 
 Plus a weekly celebration modal that fires once when the kid crosses into a
 new week.
+
+Safety nets: `index.html` swaps the boot splash for a message and a 911 link
+if the app has not mounted in 10 seconds. A React error boundary (`Boundary`
+in `app.js`) catches render crashes with Reload, 911, and a confirm-gated
+reset. A `visibilitychange` listener re-renders and rolls the streak when the
+app resumes on a new day, since iOS resumes home-screen apps without
+reloading. It only updates already-loaded state; initial load stays
+synchronous.
 
 ## Age math
 
