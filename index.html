@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <script>
   tailwind.config = { corePlugins: { preflight: true } };
 </script>
@@ -81,13 +81,28 @@
 <div id="boot"><span>Dad Again</span></div>
 <div id="root"></div>
 
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.9/babel.min.js"></script>
 
 <script type="text/babel" src="./app.js"></script>
 
 <script>
+  // If the app has not mounted after 10 seconds, something failed to load.
+  // Say so instead of leaving a silent splash, and keep 911 one tap away.
+  // The app removes #boot when it mounts, so this clears itself if it recovers.
+  setTimeout(function () {
+    var el = document.getElementById('boot');
+    if (!el) return;
+    el.innerHTML =
+      '<div style="max-width:320px;padding:24px;text-align:center">' +
+        '<span>Dad Again</span>' +
+        '<p style="font-family:\'Inter Tight\',system-ui,sans-serif;font-size:15px;line-height:1.5;color:#d4cec3;margin:20px 0 24px">' +
+          'It did not load. Get some signal and reopen it.</p>' +
+        '<a href="tel:911" style="display:block;height:48px;line-height:48px;border-radius:999px;background:#dc4444;color:#0d0c0a;font-family:\'Inter Tight\',system-ui,sans-serif;font-weight:600;font-size:15px;text-decoration:none">Emergency? Call 911</a>' +
+      '</div>';
+  }, 10000);
+
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
       navigator.serviceWorker.register('./sw.js').catch(function(){});

@@ -52,6 +52,11 @@ const daysSince = bd => {
   return Math.round((now - born) / 864e5);
 };
 
+// A real YYYY-MM-DD that is not in the future. An empty or bad birthdate used
+// to save anyway and render "NaN days old" with blank tips.
+const isDate  = bd => /^\d{4}-\d{2}-\d{2}$/.test(bd || '') && !isNaN(new Date(bd + 'T12:00:00'));
+const validBd = bd => isDate(bd) && bd <= today();
+
 const dayOf   = bd => Math.max(0, daysSince(bd));
 const weekOf  = bd => Math.max(1, Math.min(12, Math.floor(dayOf(bd) / 7) + 1));
 const buzz    = () => { try { navigator.vibrate && navigator.vibrate(8); } catch (e) {} };
@@ -71,7 +76,7 @@ function DadAgain() {
   const boot = (() => {
     let p = null;
     try { p = JSON.parse(store.get('babyProfile')); } catch (e) {}
-    if (!p || !p.birthdate) return { screen: 'onboarding', baby: null, prog: null, notif: null, celebrate: null };
+    if (!p || !isDate(p.birthdate)) return { screen: 'onboarding', baby: null, prog: null, notif: null, celebrate: null };
 
     let g = null;
     try { g = JSON.parse(store.get('userProgress')); } catch (e) {}
@@ -311,8 +316,9 @@ function Onboarding({ step, setStep, tmpBaby, setTmpBaby, tmpNotif, setTmpNotif,
         </div>
       )}
 
-      <button onClick={() => { buzz(); step < 2 ? setStep(step + 1) : finishOnboarding(); }}
-        className="w-full bg-[#d97757] active:bg-[#b85a3d] text-[#0d0c0a] h-14 rounded-full flex items-center justify-center gap-2 font-medium text-[15px] mt-10">
+      <button disabled={!validBd(tmpBaby.birthdate)}
+        onClick={() => { if (!validBd(tmpBaby.birthdate)) return; buzz(); step < 2 ? setStep(step + 1) : finishOnboarding(); }}
+        className="w-full bg-[#d97757] active:bg-[#b85a3d] disabled:opacity-40 text-[#0d0c0a] h-14 rounded-full flex items-center justify-center gap-2 font-medium text-[15px] mt-10">
         {step < 2 ? 'Continue' : 'Take me in'} <ArrR cls="w-4 h-4" sw={2} />
       </button>
     </div>
@@ -689,7 +695,8 @@ function SettingsScreen({ baby, prog, notif, saveBaby, saveNotif, wipe }) {
             className="w-full bg-transparent border-b border-[#3a3530] py-2 text-[18px] placeholder-[#5a5650] focus:border-[#d97757] focus:outline-none mb-6" />
           <label className="mono text-[10px] tracking-[.25em] uppercase text-[#8b8579] mb-2 block">Birthdate</label>
           <input type="date" value={bd} max={today()}
-            onChange={e => { setBd(e.target.value); saveBaby({ birthdate: e.target.value }); }}
+            onChange={e => { setBd(e.target.value); if (validBd(e.target.value)) saveBaby({ birthdate: e.target.value }); }}
+            onBlur={() => { if (!validBd(bd)) setBd(baby.birthdate); }}
             className="w-full bg-transparent border-b border-[#3a3530] py-2 text-[18px] focus:border-[#d97757] focus:outline-none" />
         </div>
 

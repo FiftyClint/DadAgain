@@ -39,6 +39,10 @@ could fail offline was removed on purpose.
 Nothing leaves the phone. Three keys: `babyProfile`, `userProgress`,
 `notifPrefs`.
 
+**CDN versions are pinned** in `index.html` (React 18.3.1, Babel standalone
+7.29.9, Tailwind 3.4.17) and the same URLs are precached in `sw.js`, which is
+what makes the app open with no signal. Change both files together.
+
 **Service worker caches the shell.** When `app.js` changes, bump the cache
 version string in `sw.js` from `dadagain-v1` to `v2` and so on, or his phone
 serves a stale copy and he will think the change did not land.
