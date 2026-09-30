@@ -134,6 +134,9 @@ marketing.
 - When something is normal, say it is normal and stop. Do not pad reassurance.
 - When it is an emergency, say call the doctor and stop. Do not soften.
 - Medical content stays conservative. Anything ambiguous routes to a doctor.
+- Every medical number, timing, or call-the-doctor rule must trace to a page in
+  `SOURCES.md` (AAP, CDC, NIH, ACOG, WHO, FDA, NHS, or a major children's
+  hospital). Open the page and quote it before adding or changing a claim.
 
 Good: "Cluster feeding is normal. It is not a sign the milk is running out."
 Bad: "Don't worry, mama's milk supply is probably just fine!"

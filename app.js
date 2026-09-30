@@ -701,9 +701,10 @@ function QuickHelp({ qh, setQh, setScreen, orphan }) {
               <PhoneI cls="w-4 h-4 text-[#dc4444]" sw={2} />
               <span className="mono text-[10px] tracking-[.3em] uppercase text-[#dc4444]">Call 911 if</span>
             </div>
-            {["Baby is blue (lips, face)", "Not breathing, or struggling to",
-              "Won't wake up or is unresponsive", "Seizure", "Severe bleeding",
-              "Major fall or injury", "She talks about harming herself or the baby"].map((t, i) => (
+            {["Blue, gray, pale, or blotchy skin, lips, or tongue", "Not breathing, or struggling to",
+              "Unresponsive, floppy, or not waking like usual", "Seizure", "Major bleeding",
+              "A fall that may have hurt the head, neck, or back", "A rash that does not fade when you press it",
+              "She talks about harming herself or the baby"].map((t, i) => (
               <div key={i} className="flex gap-3 text-[14px] text-[#e8e3d8] leading-relaxed mb-2.5 last:mb-0">
                 <span className="text-[#dc4444] mt-[7px] text-[5px]">●</span><span>{t}</span>
               </div>
@@ -967,30 +968,30 @@ function Celebration({ week, name, onDone }) {
 /* ================= DATA ================= */
 
 const TIPS_BY_WEEK = {
-  1: ["First poops are black and tar-like. That's meconium. Normal.", "Aim for 8 to 12 feedings today. Track the wet diapers.", "Skin to skin regulates the kid's breathing and temp. Shirt off, baby on your chest.", "She is bleeding heavily and running on nothing. Bring water and food before she asks.", "Rectal fever of 100.4 or higher: call the pediatrician now, day or night. Not a wait-and-see.", "Cord stays on. Sponge baths only. Fold the diaper below it.", "Baby will drop 7 to 10 percent of birth weight this week. Expected."],
-  2: ["Baby should be back to birth weight by the end of this week.", "Catch hunger cues before the crying: rooting, hands to mouth, lip smacking.", "Cluster feeding is normal. It is not a sign the milk is running out.", "Baby blues run through about day 14. Moodiness and crying. Not PPD yet.", "Cord stump may drop this week. Don't pull it. A little blood is fine.", "Cradle cap, baby acne, peeling skin. All normal. Don't pick at any of it.", "First real smile usually shows up somewhere in weeks 4 to 6."],
-  3: ["Growth spurt is likely this week. Hungrier does not mean low supply.", "Evening fussiness peaks weeks 3 through 6. The 5 S's are your tool.", "Tummy time, 1 to 3 minutes, a few times a day. Hates the floor? Use your chest.", "Crying 3+ hours a day for 3+ weeks means read the colic guide.", "Take the baby out for a walk. Give her an hour alone in the house.", "Burp every 2 to 3 ounces, or when you switch sides.", "Spit-up looks like way more than it is. One to two tablespoons is nothing."],
-  4: ["One month in. Baby may lift their head for a second during tummy time.", "Real smiles may start. Smile back every time. That's the attachment work.", "One-month pediatrician visit is this week. Go with her.", "Talk and narrate constantly. They're starting to tune in to your voice.", "Sleep may stretch a little. Some 3 to 4 hour blocks at night.", "Crying tends to peak right around now. It gets better after this.", "She is still healing. Do not let up on the support."],
-  5: ["Smiles are getting reliable. Respond to every single one.", "Cooing and vowel sounds may start. Talk back like it's a conversation.", "This is the peak fussy stretch. Weeks 5 and 6 are usually the worst of it.", "Build the day/night split: bright and loud by day, dim and boring at night.", "Tummy time up to 5 to 10 minutes total a day.", "If it looks like colic, work the soothing list in order instead of randomly.", "Baby blues should have lifted by now. If they haven't, pay attention."],
-  6: ["Another growth spurt is likely. Feeding jumps temporarily.", "Tear ducts open up. You'll see real tears for the first time.", "No pediatrician visit this week. The next one is at 2 months, with shots.", "Her OB should check in by 3 weeks and do a full checkup by 12. Mood screening is part of it. Go with her.", "More responsive to voices now. Answer the babbling.", "Fussiness should start easing after this week.", "Push-ups during tummy time may start showing up."],
-  7: ["Awake windows are longer now, 60 to 90 minutes.", "Watch for tired cues near the end of each awake window.", "Drowsy-but-awake put-downs start to matter around now.", "Simple play works: high contrast cards, a rattle, your face.", "More varied sounds. Have actual conversations with them.", "They know who you are now. That recognition is real.", "Sleep may get more predictable. Don't expect a miracle."],
-  8: ["Two months. Head control is noticeably better.", "Hands are opening up instead of staying fisted.", "First real laugh may show up. Get it on video.", "Two-month vaccines this week. Expect a rough evening after.", "Bedtime routine starts paying off: bath, feed, book, down.", "Mirrors and cause-and-effect toys land now.", "Tummy time target is 20 to 30 minutes total across the day."],
-  9: ["Starting to tell familiar faces from strangers.", "Turning the head toward sounds.", "Possible growth spurt. Hunger spikes for a few days.", "Sleep may consolidate. Five to six hour stretches are possible.", "Read to them daily. It's the rhythm and your voice that matter, not the words.", "Vary tummy time: your chest, the floor, a Boppy, with a toy.", "Keep the put-down routine identical every time."],
+  1: ["First poops are black and tar-like. That's meconium. Normal.", "Aim for 8 to 12 feedings today. Track the wet diapers.", "Skin to skin regulates the kid's breathing and temp. Shirt off, baby on your chest.", "She is bleeding and running on nothing. Bring water and food before she asks. Soaking two pads an hour is not normal: see Quick Help.", "Rectal fever of 100.4 or higher: call the pediatrician now, day or night. Not a wait-and-see.", "Cord stays on. Sponge baths only. Fold the diaper below it.", "Baby will drop 7 to 10 percent of birth weight this week. Expected."],
+  2: ["Baby should be back to birth weight by the end of this week.", "Catch hunger cues before the crying: rooting, hands to mouth, lip smacking.", "Cluster feeding is normal. It is not a sign the milk is running out.", "Baby blues run through about day 14. Moodiness and crying. Not PPD yet.", "Cord stump may drop this week. Don't pull it. A little blood is fine.", "Cradle cap, baby acne, peeling skin. All normal. Don't pick at any of it.", "First real smile usually shows up in the second month. Most kids have it by 2 months."],
+  3: ["Growth spurt is likely this week. Hungrier does not mean low supply.", "Evening fussiness builds from here and peaks around week 6. The 5 S's are your tool.", "Tummy time, 3 to 5 minutes, 2 to 3 times a day. Hates it? Roll a towel under the arms.", "Crying 3+ hours a day for 3+ weeks means read the colic guide.", "Take the baby out for a walk. Give her an hour alone in the house.", "Burp every 2 to 3 ounces, or when you switch sides.", "Spit-up looks like way more than it is. Growing and not bothered by it means fine."],
+  4: ["One month in. Baby may lift their head for a second during tummy time.", "Real smiles may start. Smile back every time. That's the attachment work.", "One-month pediatrician visit is this week. Go with her.", "Talk and narrate constantly. They're starting to tune in to your voice.", "Sleep still comes in bursts, 30 minutes to 3 hours. Longer stretches come later.", "Crying is building toward its peak around week 6. It gets better after that.", "She is still healing. Do not let up on the support."],
+  5: ["Smiles are getting reliable. Respond to every single one.", "Cooing and vowel sounds may start. Talk back like it's a conversation.", "This is the peak fussy stretch. Weeks 5 and 6 are usually the worst of it.", "Build the day/night split: bright and loud by day, dim and boring at night.", "Tummy time: work up to 15 to 30 minutes total a day by week 7.", "If it looks like colic, work the soothing list in order instead of randomly.", "Baby blues should have lifted by now. If they haven't, pay attention."],
+  6: ["Another growth spurt is likely. Feeding jumps temporarily.", "Real tears may start showing up. Some kids take until 2 months.", "No pediatrician visit this week. The next one is at 2 months, with shots.", "Her OB should check in by 3 weeks and do a full checkup by 12. Mood screening is part of it. Go with her.", "More responsive to voices now. Answer the babbling.", "Fussiness should start easing after this week.", "Head lifts during tummy time are getting stronger."],
+  7: ["Awake windows are longer now, 1 to 2 hours.", "Watch for tired cues near the end of each awake window.", "Drowsy-but-awake is a 4-month skill. Trying it now is fine. Not working yet is normal.", "Simple play works: high contrast cards, a rattle, your face.", "More varied sounds. Have actual conversations with them.", "They light up when you walk over. That is real.", "Sleep may get more predictable. Don't expect a miracle."],
+  8: ["Two months. Head control is noticeably better.", "Hands are opening up instead of staying fisted.", "Laughs usually come around 4 months, chuckles first. Have the phone ready.", "Two-month visit and vaccines this week. Go with her.", "Bedtime routine starts paying off: bath, feed, book, down.", "They watch faces intently now. Get close and talk.", "Tummy time target: 15 to 30 minutes total across the day, working toward 30."],
+  9: ["Lights up for you and her. Telling strangers apart comes later, around 6 months.", "Turning the head toward sounds.", "Possible growth spurt. Hunger spikes for a few days.", "Sleep may start to stretch. Most kids sleep 6 to 8 hours at night around 3 months.", "Read to them daily. It's the rhythm and your voice that matter, not the words.", "Vary tummy time: the floor, a rolled towel under the arms, a toy in reach.", "Keep the put-down routine identical every time."],
   10: ["Movements are getting purposeful instead of random.", "May start grabbing at things on purpose.", "Faces are still the best toy in the house. That's you.", "Babbling is expanding. Answer it like dialogue.", "May start briefly self-soothing by sucking on hands.", "Put safe toys just within reach to encourage reaching.", "The bedtime routine is doing real work now. Don't break it."],
-  11: ["Some babies do 6 to 8 hour stretches now. Some don't. Both are normal.", "Rolling attempts may start, back to side first.", "Head control is solid.", "Smiles come easily now.", "Sleep setup: dark room, white noise across the room. Stop swaddling the first time the kid tries to roll.", "Never leave them on a couch or bed unattended. Rolling arrives without warning.", "Active play: bicycle legs, supported sitting."],
-  12: ["Three months. The fourth trimester is over.", "Real out-loud laughing may start.", "Better at settling themselves.", "Sleep is more patterned now.", "No visit this month. The next pediatrician visit is at 4 months.", "Swaddle is done the first time the kid tries to roll.", "You got through the hardest stretch. Say that out loud to her."]
+  11: ["Some babies do 6 to 8 hour stretches now. Some don't. Both are normal.", "Rolling attempts may start, back to side first.", "Head control keeps getting steadier.", "Smiles come easily now.", "Sleep setup: dark room, white noise across the room. Stop swaddling the first time the kid tries to roll.", "Never leave them on a couch or bed unattended. Rolling arrives without warning.", "Active play: bicycle legs, supported sitting."],
+  12: ["Three months. The fourth trimester is over.", "Chuckles may start. Full laughs usually come by 6 months.", "Reaching for things on purpose.", "Sleep is more patterned now.", "No visit this month. The next pediatrician visit is at 4 months.", "Swaddle is done the first time the kid tries to roll.", "You got through the hardest stretch. Say that out loud to her."]
 };
 
 const WEEKLY_CHECKLISTS = {
-  1: ["Track every feeding and diaper today", "Take a full diaper shift so she sleeps", "Stock the nursing station: water, snacks, charger", "Handle one visitor situation without her asking", "Do one skin-to-skin session, 15 minutes plus", "Tell her one specific thing she's doing well"],
+  1: ["Track every feeding and diaper today", "Take a full diaper shift so she sleeps", "Stock the nursing station: water, snacks, charger", "Handle one visitor situation without her asking", "Do one skin-to-skin session", "Tell her one specific thing she's doing well"],
   2: ["Do tummy time, 3 to 5 minutes", "Take the baby out so she gets the house to herself", "Check the cord stump", "Catch two hunger cues before any crying", "Own dinner for all seven days", "Ask her what she needs, then actually do it"],
   3: ["Run the 5 S's during a fussy stretch", "Tummy time, 5 minutes, twice a day", "Take a full feed shift", "Start naming the different cries", "Give her one full hour off duty", "Read a book out loud to the baby"],
   4: ["Go to the one-month pediatrician visit", "Tummy time, 10 minutes total daily", "Make eye contact and smile back", "Narrate your day out loud for 10 minutes", "Set up a food and snack rotation for her", "Ask her directly how she's actually doing"],
   5: ["Tummy time, 15 minutes total daily", "Lock in the day/night routine", "Work the soothing list in order if it looks like colic", "Respond to every smile", "Get her out of the house for 30 minutes", "Write down or photograph one milestone"],
   6: ["Get the 2-month visit on the calendar", "Be at her postpartum checkup", "Know the fever rule: rectal 100.4 or higher, call now", "Tummy time, 20 minutes total", "Add variety: textures, sounds, new rooms", "Name three specific things you appreciate about her"],
   7: ["Learn the tired cues", "Try one drowsy-but-awake put-down", "Read to the baby", "Simple play: contrast cards, talking", "Take a full night or morning shift", "Check in on her, and listen to the answer"],
-  8: ["Go to the two-month visit and vaccines", "Tummy time, 20 to 30 minutes total daily", "Change up the tummy time setup", "Lock in the bedtime routine", "Use a mirror with the baby", "Plan something that is just for her"],
-  9: ["Read to the baby daily", "Practice drowsy-but-awake every time", "One reading session, 5 minutes plus", "Note any growth spurt pattern", "Take the baby on a solo outing", "Run one full evening on your own"],
+  8: ["Go to the two-month visit and vaccines", "Tummy time, 20 to 30 minutes total daily", "Change up the tummy time setup", "Lock in the bedtime routine", "Talk face to face for 10 minutes", "Plan something that is just for her"],
+  9: ["Read to the baby daily", "Practice drowsy-but-awake when you can", "One reading session, 5 minutes plus", "Note any growth spurt pattern", "Take the baby on a solo outing", "Run one full evening on your own"],
   10: ["Put safe toys within reach to prompt grabbing", "Answer the babbling like conversation", "Hold the bedtime routine steady", "Vary tummy time positions", "Do a household job she didn't ask about", "Tell her you see what she's carrying"],
   11: ["Optimize the sleep environment", "Never leave the baby on an elevated surface", "Active play: bicycle legs, supported sitting", "Stop swaddling at the first roll attempt", "Put something on the calendar to look forward to", "Say out loud what she's been through"],
   12: ["Get the 4-month visit on the calendar", "No swaddle once rolling starts", "Keep the routine consistent", "Write down where you started and where you are", "Mark the end of the fourth trimester with her", "Say what surprised you and what you're proud of"]
@@ -999,15 +1000,15 @@ const WEEKLY_CHECKLISTS = {
 const WEEK_PREVIEWS = {
   2: ["Baby regains birth weight", "Cord stump may drop", "Cluster feeding intensifies"],
   3: ["First growth spurt", "Evening fussiness builds", "More tummy time"],
-  4: ["Possible first real smile", "One-month pediatrician visit", "Some longer night stretches"],
+  4: ["Real smiles getting close", "One-month pediatrician visit", "Sleep still in short bursts"],
   5: ["Peak fussiness stretch", "Cooing and vowel sounds", "Day/night rhythm forms"],
   6: ["Another growth spurt", "Her postpartum checkup", "Real tears show up"],
-  7: ["Longer awake windows", "Drowsy-but-awake matters", "They clearly recognize you"],
-  8: ["First laugh may land", "Two-month vaccines", "Hands opening up"],
-  9: ["Tells familiar from strangers", "Sleep may consolidate", "Growth spurt possible"],
+  7: ["Longer awake windows", "Watch for tired cues", "They light up for you"],
+  8: ["Head lifts get stronger", "Two-month vaccines", "Hands opening up"],
+  9: ["Turns toward sounds", "Sleep may start to stretch", "Growth spurt possible"],
   10: ["Purposeful grabbing", "Babbling expands", "Brief self-soothing"],
   11: ["Rolling attempts start", "Possible 6 to 8 hour stretches", "Stop leaving them elevated"],
-  12: ["Out of the fourth trimester", "Real laughing", "4-month visit is next"],
+  12: ["Out of the fourth trimester", "Chuckles may start", "4-month visit is next"],
   13: ["Past the newborn phase", "You made it through the worst of it", "More content coming"]
 };
 
@@ -1017,7 +1018,7 @@ const QUICK_HELP = [
     { heading: "Run all five S's together", items: [
       { label: "Swaddle", detail: "Snug at the chest, loose at the hips. Arms down." },
       { label: "Side or stomach", detail: "Hold in that position. Not for sleep." },
-      { label: "Shush", detail: "Loud, right near the ear. Vacuum-level loud." },
+      { label: "Shush", detail: "Steady shushing, close by" },
       { label: "Swing", detail: "Small, fast, jiggly. Support the head." },
       { label: "Suck", detail: "Pacifier or a clean finger" }] },
     { heading: "If that isn't working", items: ["Bicycle the legs for gas", "Warm bath", "Skin to skin", "Car ride or stroller walk", "White noise on, across the room, not at max"] },
@@ -1036,16 +1037,16 @@ const QUICK_HELP = [
       { label: "White, gray, or chalky pale", detail: "Call now. Possible liver issue." },
       { label: "Red or bloody", detail: "Call now." },
       { label: "Black after the meconium phase", detail: "Call now. Can be digested blood." }] },
-    { heading: "Frequency", items: ["Breastfed weeks 1 to 4: three or more a day", "Breastfed after week 4: anywhere from every feed to once in 7 to 10 days. Both normal.", "Formula: usually daily or every other day"] },
-    { heading: "Also call if", danger: true, items: ["No poop for 3+ days and the baby seems uncomfortable", "Sudden change plus fever, vomiting, or refusing to eat"] }
+    { heading: "Frequency", items: ["Breastfed, first month: 3 or more a day after day 5", "Breastfed after about 4 weeks: some go once every 4 to 7 days. Normal if soft and not straining.", "Formula: at least once a day"] },
+    { heading: "Also call if", danger: true, items: ["Breastfed, first month: fewer than 3 poops a day. Call within a day.", "Formula-fed, fewer than one a day and straining", "Sudden change plus fever, vomiting, or refusing to eat"] }
   ]},
   { emoji: '😴', title: "Won't sleep", sub: "Run the checklist", sections: [
     { heading: "Check the room", items: ["Is it dark? Actually dark, not dim.", "White noise on?", "Cool, not warm? A sweaty chest means too hot.", "Swaddled, if not trying to roll yet?"] },
-    { heading: "Awake windows by age", items: ["0 to 4 weeks: 45 to 60 minutes max", "4 to 8 weeks: 60 to 90 minutes", "8 to 12 weeks: 90 to 120 minutes"] },
+    { heading: "Awake windows by age", items: ["Birth to 1 month: 30 to 60 minutes", "1 to 3 months: 1 to 2 hours"] },
     { heading: "Tired cues. Put down before these escalate.", items: ["Yawning", "Red eyebrows", "Looking away from you", "Jerky movements", "Fussing"] },
-    { heading: "Getting them down", items: ["The five S's", "Rocking or bouncing", "Feeding to sleep is fine at this age. Ignore anyone who says otherwise."] },
-    { heading: "Won't stay down", items: ["Startle reflex. Swaddle snug at the chest, loose at the hips.", "Wait until fully limp before transferring, 10 to 20 minutes", "Burp better and bicycle the legs before bed"] },
-    { heading: "Normal. Don't try to fix.", items: ["Waking every 2 to 3 hours", "Only sleeping on someone", "Thirty to 45 minute naps until 3 or 4 months"] },
+    { heading: "Getting them down", items: ["The five S's", "Rocking or bouncing", "Feeding or rocking to sleep is common early on. Drowsy-but-awake is the goal from 4 months."] },
+    { heading: "Won't stay down", items: ["Startle reflex. Swaddle snug at the chest, loose at the hips.", "Burp better and bicycle the legs before bed"] },
+    { heading: "Normal. Don't try to fix.", items: ["Sleeping 1 to 2 hours at a time", "Sleep in bursts of 30 minutes to 3 hours", "No real schedule yet"] },
     { heading: "Worth a call if", danger: true, items: ["Very hard to wake for feeds", "Sleeping great but not gaining weight"] }
   ]},
   { emoji: '🍼', title: "Not eating", sub: "Breast or bottle", sections: [
@@ -1062,7 +1063,7 @@ const QUICK_HELP = [
     { heading: "Circumcision: normal", items: ["Yellow-white film on the head. Do not wipe it off.", "Some swelling the first few days", "Redness that improves a little each day"] },
     { heading: "Circumcision: call the doctor", danger: true, items: ["Bleeding that won't stop with gentle pressure", "Redness or swelling increasing after day 3", "Pus", "Foul smell", "Hasn't peed within 8 hours of the procedure", "Plastibell still on after 10 days"] },
     { heading: "Skin: normal", items: ["Baby acne on the face, weeks 2 to 4", "Milia, tiny white bumps", "Peeling skin", "Cradle cap", "Blotchy red with white centers, called erythema toxicum"] },
-    { heading: "Skin: call the doctor", danger: true, items: ["Any rash plus fever", "A rash that does not fade when you press it", "Blisters or pus-filled bumps", "Redness spreading, warm to the touch", "Yellowing spreading down the body"] },
+    { heading: "Skin: call the doctor", danger: true, items: ["Any rash plus fever", "A rash that does not fade when you press it. Call 911.", "Blisters or pus-filled bumps", "Redness spreading, warm to the touch", "Yellow on the belly, arms, or legs, or in the whites of the eyes", "Yellow and hard to wake, or not feeding well", "Yellow past 2 weeks on formula, or past 4 weeks breastfed"] },
     { heading: "Breathing: normal", items: ["Pauses up to 10 seconds then catching up. Called periodic breathing.", "Sneezing, hiccups, and congestion"] },
     { heading: "Breathing: call 911", danger: true, items: ["Over 60 breaths a minute consistently", "Grunting on every breath", "Nostrils flaring", "Ribs pulling in with each breath", "Any pause longer than 10 seconds", "Blue lips or face. Call 911 now."] }
   ]},
@@ -1072,7 +1073,9 @@ const QUICK_HELP = [
     { heading: "What to say", items: ["I've noticed you seem really down lately. I'm worried about you. Can we talk about getting some help?"] },
     { heading: "What not to say", items: ["You should be happy", "Other moms handle this fine", "Just try to sleep more"] },
     { heading: "Act immediately if", danger: true, items: ["She mentions harming herself or the baby", "She seems out of touch with reality", "Hallucinations or delusions", "She talks about not wanting to be here"] },
-    { heading: "What to do", items: ["Don't leave her alone with the baby", "Hallucinations, delusions, or out of touch with reality: 911 or the ER now. Do not wait on the OB.", "Anything else on this list: call her OB or your pediatrician. They will route it.", "In the US you can call or text 988 any time", "PPD is a medical condition, not a character flaw. It responds to treatment."] }
+    { heading: "What to do", items: ["Hallucinations, delusions, or out of touch with reality: 911 or the ER now. Do not wait on the OB.", "Anything else on this list: call her OB or your pediatrician. They will route it.", "In the US you can call or text 988 any time", "Maternal Mental Health Hotline: call or text 1-833-852-6262. Free, 24/7.", "PPD is a medical condition, not a character flaw. It responds to treatment."] },
+    { heading: "Her body: call 911 if", danger: true, items: ["Chest pain", "Coughing or gasping for air", "Seizure", "Severe pain low in the belly", "Pain, swelling, and tenderness in a leg"] },
+    { heading: "Her body: call her OB right away if", danger: true, items: ["Bleeding that soaks two pads an hour for more than an hour or two", "Fever over 100.4", "A headache medicine does not fix, or a bad headache with vision changes", "Dizziness or fainting", "Red streaks or painful new lumps in her breasts", "Stitches or incision pain that keeps getting worse", "Tell them she gave birth recently."] }
   ]}
 ];
 
@@ -1087,14 +1090,14 @@ const GUIDES = [
     { heading: "Signs they're getting enough", list: ["Six or more wet diapers a day after day 5", "Gaining weight at visits", "Audible swallowing during the feed", "Settled after eating"] },
     { heading: "Formula amounts by age", list: ["Week 1: 1 to 2 oz per feed", "End of month 1: at least 3 to 4 oz per feed", "Rough daily total: about 2.5 oz per pound of body weight", "Over 32 oz a day: ask the pediatrician"] },
     { heading: "Formula prep", list: ["Wash hands, use clean bottles", "Follow the ratio on the package exactly. Do not eyeball it.", "Test on your wrist. It should feel like nothing.", "Never microwave. It makes hot spots that will burn their mouth.", "Use a mixed bottle within 2 hours. Once feeding starts, done within 1 hour. Toss the rest.", "Under 2 months with powder: boil the water, wait about 5 minutes, then mix"] },
-    { heading: "Paced bottle feeding", list: ["Hold them semi-upright, not flat on their back", "Keep the bottle close to horizontal", "Let them draw the milk instead of pouring it in", "Pause every few minutes and tip the bottle down", "Aim for 15 to 20 minutes. Prevents overfeeding and spit-up."] },
+    { heading: "Paced bottle feeding", list: ["Hold them semi-upright, not flat on their back", "Keep the bottle close to horizontal", "Let them draw the milk instead of pouring it in", "Pause every few minutes and tip the bottle down", "Aim for 15 to 30 minutes, about as long as a breastfeed"] },
     { heading: "Burping", list: ["Over the shoulder, upright, pat and rub the back", "Sitting on your lap, support the chin, lean them forward, pat", "Face down across your thighs, head slightly elevated, pat"] }
   ]},
   { title: "Sleep", sub: "Wake windows, safe sleep", icon: MoonI, sections: [
-    { heading: "Sleep needs by week", list: ["Weeks 1 to 2: 16 to 17 hours total, 2 to 3 hour stretches", "Weeks 3 to 4: 15 to 17 hours, 3 to 4 hour stretches", "Weeks 5 to 6: 15 to 16 hours, 4 to 5 hour stretches", "Weeks 7 to 8: 14 to 16 hours, 5 to 6 hour stretches", "Weeks 9 to 12: 14 to 15 hours, 6 to 8 possible"] },
-    { heading: "Awake windows", list: ["0 to 4 weeks: 45 to 60 minutes max", "4 to 8 weeks: 60 to 90 minutes", "8 to 12 weeks: 90 to 120 minutes"] },
+    { heading: "Sleep needs by week", list: ["Newborns: 16 to 17 hours a day, often only 1 to 2 hours at a time", "Weeks 1 to 12: 14 to 17 hours total, naps included", "Most kids sleep 6 to 8 hours at night around 3 months"] },
+    { heading: "Awake windows", list: ["Birth to 1 month: 30 to 60 minutes", "1 to 3 months: 1 to 2 hours"] },
     { heading: "Tired cues", list: ["Yawning, red eyebrows, looking away", "Jerky movements, fussing", "Put them down before these escalate, not after"] },
-    { heading: "Safe sleep, the ABCs", list: ["ALONE: nothing else in the crib. No blankets, pillows, toys, or bumpers.", "BACK: always on the back, every sleep, including naps", "CRIB: firm flat surface with a fitted sheet", "Room at 68 to 72 degrees", "Room share, do not bed share, for the first six months"] }
+    { heading: "Safe sleep, the ABCs", list: ["ALONE: nothing else in the crib. No blankets, pillows, toys, or bumpers.", "BACK: always on the back, every sleep, including naps", "CRIB: firm flat surface with a fitted sheet", "Room at 68 to 72 degrees", "Room share at least the first six months. Never bed share."] }
   ]},
   { title: "Cry Decoder", sub: "Six cries and the five S's", icon: HeartI, sections: [
     { heading: "Hunger", list: ["Sound: rhythmic, repetitive, builds low to high", "Signs: rooting, hands to mouth", "Fix: feed"] },
@@ -1103,10 +1106,11 @@ const GUIDES = [
     { heading: "Overstimulated", list: ["Sound: sudden and intense", "Signs: looking away, jerky movement, mid-activity", "Fix: dark quiet room, cut the input"] },
     { heading: "Bored", list: ["Sound: fussy, stop-start, not intense", "Signs: stops the second you pick them up", "Fix: change rooms, engage, tummy time"] },
     { heading: "Pain", list: ["Sound: sudden high-pitched scream, nothing helps", "Signs: inconsolable, unlike their normal cry", "Fix: check for a hair tourniquet, take a temp, call the doctor if it keeps up"] },
-    { heading: "The five S's, all at once", list: ["SWADDLE, snug with arms down", "SIDE or STOMACH, held in that position, never for sleep", "SHUSH, loud and close to the ear", "SWING, small fast rhythmic motion", "SUCK, pacifier or clean finger"] }
+    { heading: "The five S's, all at once", list: ["SWADDLE, snug with arms down", "SIDE or STOMACH, held in that position, never for sleep", "SHUSH, steady and close", "SWING, small fast rhythmic motion", "SUCK, pacifier or clean finger"] }
   ]},
   { title: "Backing Her Up", sub: "Recovery, baby blues, PPD", icon: HeartI, sections: [
-    { heading: "Physical recovery, about six weeks", list: ["Vaginal birth: soreness, possible stitches, bleeding for 4 to 6 weeks", "C-section: this is major abdominal surgery, the recovery is longer", "Uterus contracting, which hurts most while nursing", "Engorgement, night sweats, hair falling out", "Exhaustion on a level that is hard to describe"] },
+    { heading: "Physical recovery, about six weeks", list: ["Vaginal birth: soreness, possible stitches, bleeding for 4 to 6 weeks", "C-section: this is major abdominal surgery, the recovery is longer", "Uterus contracting, which hurts most while nursing", "Engorgement, night sweats, hair falling out", "Exhaustion on a level that is hard to describe"],
+      danger: ["Bleeding that soaks two pads an hour for more than an hour or two", "Fever over 100.4", "A bad headache with vision changes", "Chest pain, trouble breathing, or a painful swollen leg: 911"] },
     { heading: "What actually helps", list: ["Take everything except the feeding", "Own the household, the meals, and the visitors", "Bring food and water without being asked", "Help her get to the shower and bathroom early on", "Zero expectations about sex. Do not raise it."] },
     { heading: "Baby blues, days 3 to 14", list: ["Affects most new mothers", "Crying, mood swings, feeling swamped", "It's a hormone crash and it lifts by about two weeks", "Don't try to fix it. Be there and take the baby."] },
     { heading: "PPD, watch closely", list: ["Runs longer than two weeks", "Sadness or hopelessness that doesn't lift", "No interest in the baby, or fear of being alone with the baby", "Can't sleep even when she has the chance", "Withdrawing from family and friends", "Talking about being a failure", "Feeling disconnected from the baby"],
@@ -1114,30 +1118,30 @@ const GUIDES = [
     { heading: "Postpartum anxiety", list: ["Racing thoughts, can't settle", "Constant fear about the baby's safety", "Checking on the baby over and over", "Physical symptoms: racing heart, nausea", "Same play: name it out loud, support it, get her professional help"] }
   ]},
   { title: "Senses", sub: "Vision, hearing, social", icon: EyeI, sections: [
-    { heading: "Vision", list: ["Birth: 8 to 12 inches, blurry, high contrast only", "2 weeks: starting to lock onto faces", "1 month: tracks a moving object briefly", "2 months: recognizes you from across a room", "3 months: tracking well, knows familiar people", "4 months: full color and depth perception"] },
-    { heading: "What actually helps", list: ["High contrast black and white cards the first month", "Face to face at 8 to 12 inches", "Slow moving objects to follow", "Color starts landing at 2 to 3 months"] },
-    { heading: "Hearing", list: ["Birth: hears well, prefers human voices over anything else", "1 month: knows your voice and hers", "2 months: turns toward sound", "3 months: reacts to your tone, not just the noise"] },
-    { heading: "Social", list: ["Birth: prefers faces, especially eyes", "2 to 3 weeks: brief eye contact", "4 to 6 weeks: first real social smile", "2 months: smiles easily, coos", "3 months: laughs and squeals"] }
+    { heading: "Vision", list: ["Birth to 1 month: focuses 8 to 12 inches away, likes high contrast and faces", "2 months: watches faces intently, eyes follow moving things", "3 months: starts reaching for things", "4 months: sees several yards, responds to the full range of colors", "Around 5 months: depth perception kicks in"] },
+    { heading: "What actually helps", list: ["High contrast black and white cards the first month", "Face to face at 8 to 12 inches", "Slow moving objects to follow", "Full color lands by about 4 months"] },
+    { heading: "Hearing", list: ["Birth: hears well, prefers human voices over anything else", "1 month: knows your voice and hers", "2 months: turns toward sound", "4 months: makes sounds back when you talk"] },
+    { heading: "Social", list: ["Birth: prefers faces over anything else", "First weeks: holds your gaze longer and longer", "Second month: first real social smile", "2 months: smiles when you smile, may coo", "4 months: chuckles. Full laughs by 6 months."] }
   ]},
   { title: "What Actually Matters", sub: "Development, minus the marketing", icon: BrainI, sections: [
     { heading: "High impact. Do these.", list: ["Talk constantly. Narrate everything. This builds language.", "Read to them. It's the rhythm and your voice.", "Tummy time. Everything physical is built on it.", "Respond to their cues. That's how secure attachment forms.", "Your face. You are the best toy in the house."] },
-    { heading: "Some value", list: ["High contrast cards the first two months", "Singing, any singing, badly is fine", "Safe textures to touch", "Mirrors from about two months"] },
+    { heading: "Some value", list: ["High contrast cards the first two months", "Singing, any singing, badly is fine", "Safe textures to touch", "Your face, up close, talking"] },
     { heading: "Skip it. This is marketing.", list: ["Baby Einstein and similar videos", "Expensive electronic toys", "Flash cards", "Educational apps for infants", "Most of the gear in the registry"] },
-    { heading: "Tummy time progression", list: ["Weeks 1 to 2: two or three sessions, 1 to 3 minutes each", "Weeks 3 to 4: three or four sessions, 3 to 5 minutes each", "Month 2: 20 minutes plus across the day", "Month 3: 30 to 60 minutes across the day"] },
-    { heading: "If they hate it", list: ["Do it when they're content, not hungry or tired", "Get on the floor at eye level with them", "Roll a towel under the chest for support", "Prop them on a Boppy", "On your chest counts", "Short and frequent beats long and miserable"] }
+    { heading: "Tummy time progression", list: ["Start the day you get home: 3 to 5 minutes, 2 to 3 times a day", "By week 7: 15 to 30 minutes total a day", "Keep building toward at least 30 minutes a day, spread out"] },
+    { heading: "If they hate it", list: ["Try it after a diaper change or a nap", "Get on the floor in front of them", "Roll a towel under the arms to prop them up", "Put a toy within reach", "Short and frequent beats long and miserable"] }
   ]},
   { title: "Food Rules", sub: "Hard no's, intro timeline", icon: Book, sections: [
-    { heading: "Never, in the first year", list: ["Honey, until age one. Botulism risk.", "Cow's milk as the main drink, until age one", "Whole grapes, nuts, popcorn, hot dog rounds", "Hard raw vegetables", "Added salt or sugar", "Unpasteurized dairy or juice", "Raw or undercooked egg, meat, or fish", "High mercury fish: shark, swordfish, king mackerel, tilefish"] },
-    { heading: "Talk to the pediatrician first", list: ["Peanut products, especially with eczema or family allergies", "Eggs", "Tree nuts", "Fish and shellfish", "Soy", "Wheat"] },
-    { heading: "On allergens", list: ["Current guidance flipped: early introduction at 4 to 6 months may reduce allergy risk", "This is the opposite of what you were told last time. Confirm the current advice with your pediatrician."] },
-    { heading: "Introduction timeline", list: ["0 to 4 months: breast milk or formula only", "4 to 6 months: solids may start if they show readiness", "6 months: single ingredient purees, iron fortified cereal", "6 to 8 months: thicker purees, soft finger foods", "8 to 10 months: soft table foods, more variety", "10 to 12 months: most table foods, soft and in small pieces"] },
+    { heading: "Never, in the first year", list: ["Honey, until age one. Botulism risk.", "Cow's milk to drink, until age one", "Juice, until age one", "Added salt or seasoning", "Unpasteurized milk, cheese, or juice", "Raw or undercooked egg, meat, fish, or sprouts", "High mercury fish: king mackerel, marlin, orange roughy, shark, swordfish, Gulf tilefish, bigeye tuna", "Choking foods until age 4: whole grapes, nuts, popcorn, hot dogs, raw carrots. Chop tiny or skip."] },
+    { heading: "Bad eczema or a food reaction? Pediatrician first for", list: ["Peanut products, especially with eczema or family allergies", "Eggs", "Tree nuts", "Fish and shellfish", "Soy", "Wheat"] },
+    { heading: "On allergens", list: ["Guidance flipped: do not delay allergens. Most kids start them with solids around 6 months.", "Bad eczema or an egg reaction: peanut may start as early as 4 to 6 months. Pediatrician decides.", "This is the opposite of what you were told last time. Confirm the current advice with your pediatrician."] },
+    { heading: "Introduction timeline", list: ["Breast milk or formula only for about the first 6 months", "Around 6 months: most kids are ready for first bites", "Start soft or pureed", "Finger foods once they sit up and bring things to their mouth: banana, scrambled egg, soft pasta"] },
     { heading: "Readiness signs, around six months", list: ["Sits with support and holds the head steady", "Watches your food", "Lost the tongue thrust reflex", "Opens the mouth when food comes near"] }
   ]},
   { title: "Colic", sub: "What it is, what helps", icon: Alert, sections: [
     { heading: "The rule of threes", list: ["Crying 3 or more hours a day", "3 or more days a week", "For 3 or more weeks", "In an otherwise healthy baby"] },
     { heading: "What it looks like", list: ["Peaks in the late afternoon and evening", "Inconsolable no matter what you do", "Clenched fists, arched back, legs pulled up", "Face flushed red", "Hard, distended belly", "Starts around 2 to 3 weeks, peaks at 6, gone by 3 to 4 months"] },
     { heading: "What colic is not", list: ["A verdict on your parenting", "Something you caused", "Always gas", "Dangerous, once other causes are ruled out"] },
-    { heading: "What helps", list: ["The five S's, all together", "White noise across the room, not at max", "Motion: car, stroller, swing, bouncing", "Warm bath", "Bicycle legs and belly massage if it's gas", "Cut the stimulation: dark room, minimal handling", "Probiotics with L. reuteri. Ask the pediatrician first.", "If breastfeeding, she can try cutting dairy for two weeks"] },
+    { heading: "What helps", list: ["The five S's, all together", "White noise across the room, not at max", "Motion: car, stroller, swing, bouncing", "Warm bath", "Bicycle legs and belly massage if it's gas", "Cut the stimulation: dark room, minimal handling", "Breastfed only: the probiotic L. reuteri DSM 17938 may help. Not for formula-fed kids. Pediatrician first.", "If she is breastfeeding, she can try cutting dairy. Pediatrician first, one food at a time, give it 2 weeks."] },
     { heading: "Getting through it", list: ["Take shifts. One on, one completely off.", "It is fine to put the baby down safe and walk out for five minutes", "This ends. It reliably ends.", "You are not failing at this.", "This is a legitimate reason to call in help. Use it."] }
   ]}
 ];
@@ -1145,16 +1149,16 @@ const GUIDES = [
 const MILESTONES = [
   { week: 1, title: "Survival Mode", items: ["Drops 7 to 10 percent of birth weight", "Sleeps 16 to 17 hours in short bursts", "Focuses at 8 to 12 inches"] },
   { week: 2, title: "Regaining Ground", items: ["Back to birth weight by the end of the week", "More alert stretches", "Starting to focus on faces"] },
-  { week: 3, title: "First Growth Spurt", items: ["Cluster feeding intensifies", "Slightly longer alert periods", "Briefly tracks a moving object"] },
+  { week: 3, title: "First Growth Spurt", items: ["Cluster feeding intensifies", "Slightly longer alert periods", "Watches faces up close"] },
   { week: 4, title: "One Month", items: ["May lift the head during tummy time", "Eye contact emerging", "First real smile is possible"] },
   { week: 5, title: "Social Awakening", items: ["Smiles are more common", "Cooing and vowel sounds", "Head control improving"] },
-  { week: 6, title: "Tear Ducts Open", items: ["Real tears with crying", "Another growth spurt likely", "Her postpartum checkup"] },
-  { week: 7, title: "Longer Awake", items: ["Awake windows 60 to 90 minutes", "More varied sounds", "Clearly recognizes you"] },
-  { week: 8, title: "Two Months", items: ["Better head control", "Hands opening up", "First laugh may land"] },
-  { week: 9, title: "Recognition", items: ["Tells familiar people from strangers", "Turns toward sound", "Sleep may consolidate"] },
+  { week: 6, title: "Six Weeks", items: ["Real tears may start", "Another growth spurt likely", "Her postpartum checkup"] },
+  { week: 7, title: "Longer Awake", items: ["Awake windows 1 to 2 hours", "More varied sounds", "Lights up when you walk over"] },
+  { week: 8, title: "Two Months", items: ["Holds head up on tummy", "Hands opening up", "Smiles when you smile"] },
+  { week: 9, title: "Tuning In", items: ["Watches you move around the room", "Turns toward sound", "Sleep may start to stretch"] },
   { week: 10, title: "Purposeful Movement", items: ["Reaches and grabs on purpose", "Babbling expands", "Brief self-soothing"] },
   { week: 11, title: "Rolling Attempts", items: ["Back to side rolls may start", "Possible 6 to 8 hour stretches", "Active leg kicking"] },
-  { week: 12, title: "Fourth Trimester Done", items: ["Real out-loud laughing", "Better at settling themselves", "Next checkup at 4 months", "You got through the hardest part"] }
+  { week: 12, title: "Fourth Trimester Done", items: ["Chuckles may start", "Reaches for things", "Next checkup at 4 months", "You got through the hardest part"] }
 ];
 
 /* ---------- Mount ---------- */
